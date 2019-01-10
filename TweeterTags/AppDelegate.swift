@@ -2,11 +2,12 @@
 //  AppDelegate.swift
 //  TweeterTags
 //
-//  Created by COMP47390-41550 on 21/01/2018.
-//  Copyright © 2018 COMP47390-41550. All rights reserved.
+//  Created by COMP47390 on 10/01/2019.
+//  Copyright © 2018 COMP47390. All rights reserved.
 //
 
 import UIKit
+import TwitterKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,8 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        if let twitterConsumerKey = Bundle.main.infoDictionary?["TwitterConsumerKey"] as? String, let twitterConsumerSecret = Bundle.main.infoDictionary?["TwitterConsumerSecret"] as? String {
+            Twitter.sharedInstance().start(withConsumerKey:twitterConsumerKey, consumerSecret:twitterConsumerSecret)
+        }
         return true
     }
 
