@@ -2,13 +2,24 @@
 //  TweetsTVC.swift
 //  TweeterTags
 //
-//  Created by Maeve Lynskey on 06/03/2019.
+//  Created by Maeve Lynskey on 06/03/2019.Ò
 //  Copyright © 2019 COMP47390. All rights reserved.
 //
 
 import UIKit
 
-class TweetsTVC: UITableViewController {
+class TweetTableViewCell: UITableViewCell {
+    @IBOutlet weak var userAvaterImage: UIImageView!
+    @IBOutlet weak var tweeterScreenNameLabel: UILabel!
+    @IBOutlet weak var tweetContentLabel: UILabel!
+    @IBOutlet weak var tweetDateLabel: UILabel!
+    
+}
+
+class TweetsTVC: UITableViewController, UITextFieldDelegate {
+    
+    
+    @IBOutlet weak var twitterQueryTextField: UITextField!
     
     var twitterQueryText: String? = "#UCD"  {
         didSet {
@@ -25,8 +36,31 @@ class TweetsTVC: UITableViewController {
         }
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField.text == "\n"{
+            textField.resignFirstResponder()
+            return false
+        }
+        twitterQueryText = textField.text
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.backgroundColor = UIColor.blue.withAlphaComponent(0.2)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.backgroundColor = UIColor.white
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.estimatedRowHeight = tableView.rowHeight
+        tableView.rowHeight = UITableView.automaticDimension
+        
+        twitterQueryTextField.delegate = self
         refresh()
         
         // Uncomment the following line to preserve selection between presentations
@@ -52,21 +86,68 @@ class TweetsTVC: UITableViewController {
     //    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        print("numberofrows:: \(tweets.count)")
+        
         return tweets.count
         
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Tweet", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TweetTVCell", for: indexPath) as! TweetTableViewCell
         let tweeter = self.tweets[indexPath.row]
         
-        cell.textLabel?.text = tweeter.text
+        cell.tweeterScreenNameLabel.text = tweeter.user.screenName
+        cell.tweetContentLabel.text = tweeter.text
+        cell.tweetDateLabel.text = getFormattedTime(date:tweeter.created)
         
+        cell.userAvaterImage.image = #imageLiteral(resourceName: "ucd")
+
+        
+        if let url = tweeter.user.profileImageURL {
+            fetchUserAvatar(url) { (data) in
+               // Thread.sleep(forTimeInterval: 3)
+                print("fetching thumbnail for row: \(indexPath.row)")
+                if let imageData = data {
+                    //print("caching thumbnail for row: \(indexPath.row)")
+                    //self.thumbnailCache[cacheID] = fetchData
+                    //imageData = fetchData
+                    DispatchQueue.main.async {
+                        cell.userAvaterImage.image = UIImage(data: imageData)
+                    }
+                }
+            }
+        }
+
         return cell
     }
+
+    // TODO move to model? 
+    func fetchUserAvatar(_ url: URL, completion: @escaping (_ data: Data?) -> Void) {
+        let request = URLRequest(url:url)
+        let config = URLSessionConfiguration.ephemeral
+        let session = URLSession(configuration:config)
+        let task = session.downloadTask(with: request, completionHandler: { (location, response, error) -> Void in
+            var data: Data?
+            if error == nil {
+                data = try? Data(contentsOf: location!)
+            }
+            completion(data)
+        })
+        task.resume()
+    }
+    
+    
+    func getFormattedTime (date:Date) -> String {
+        
+        let date = date.description
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss z"
+        let dateObj = df.date(from: date)
+        df.dateFormat = "HH:mm"
+        
+        return df.string(from: dateObj!)
+    }
+
     
     
     /*

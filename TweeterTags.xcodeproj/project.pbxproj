@@ -73,9 +73,9 @@
 		054598E52014DE200038DD77 /* TweeterTags */ = {
 			isa = PBXGroup;
 			children = (
-				F3A58EE72232E3F700AFAC92 /* TweetsTVC.swift */,
 				054598E62014DE200038DD77 /* AppDelegate.swift */,
 				0500E85E2014ED6400D6FAD4 /* TwitterAPI.swift */,
+				F3A58EE72232E3F700AFAC92 /* TweetsTVC.swift */,
 				054598EA2014DE210038DD77 /* Main.storyboard */,
 				054598ED2014DE210038DD77 /* Assets.xcassets */,
 				054598EF2014DE210038DD77 /* LaunchScreen.storyboard */,
