@@ -19,6 +19,7 @@
 		054599162014EB930038DD77 /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 054599142014EB930038DD77 /* TwitterKitResources.bundle */; };
 		F3A58EE82232E3F700AFAC92 /* TweetsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A58EE72232E3F700AFAC92 /* TweetsTVC.swift */; };
 		F3A58EEA223527F600AFAC92 /* TweetDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A58EE9223527F600AFAC92 /* TweetDetailTVC.swift */; };
+		F3A58EEE2235AD4900AFAC92 /* RecentsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A58EED2235AD4900AFAC92 /* RecentsTVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		054599142014EB930038DD77 /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = "Twitter-Kit/TwitterKit.framework/TwitterKitResources.bundle"; sourceTree = "<group>"; };
 		F3A58EE72232E3F700AFAC92 /* TweetsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetsTVC.swift; sourceTree = "<group>"; };
 		F3A58EE9223527F600AFAC92 /* TweetDetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetDetailTVC.swift; sourceTree = "<group>"; };
+		F3A58EED2235AD4900AFAC92 /* RecentsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentsTVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				F3A58EE72232E3F700AFAC92 /* TweetsTVC.swift */,
 				F3A58EE9223527F600AFAC92 /* TweetDetailTVC.swift */,
 				054598EA2014DE210038DD77 /* Main.storyboard */,
+				F3A58EED2235AD4900AFAC92 /* RecentsTVC.swift */,
 				054598ED2014DE210038DD77 /* Assets.xcassets */,
 				054598EF2014DE210038DD77 /* LaunchScreen.storyboard */,
 				054598F22014DE210038DD77 /* Info.plist */,
@@ -177,6 +180,7 @@
 				0500E85F2014ED6400D6FAD4 /* TwitterAPI.swift in Sources */,
 				F3A58EE82232E3F700AFAC92 /* TweetsTVC.swift in Sources */,
 				054598E72014DE200038DD77 /* AppDelegate.swift in Sources */,
+				F3A58EEE2235AD4900AFAC92 /* RecentsTVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

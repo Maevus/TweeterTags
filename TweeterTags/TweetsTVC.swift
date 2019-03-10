@@ -26,7 +26,10 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
         didSet {
             print ("\(twitterQueryText!)")
             twitterQueryTextField.text = twitterQueryText!
-            refresh()
+            
+            if twitterQueryText != "\n" {
+                refresh()
+                }
             }
     }
     
@@ -58,11 +61,31 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
     
     
     func refresh() {
+        saveSearch(searchString: twitterQueryText)
+        
         let request = TwitterRequest(search: twitterQueryText!, count: 8)
                 request.fetchTweets { (tweets) -> Void in
                     DispatchQueue.main.async { () -> Void in
                         self.tweets = tweets }
                     }
+    }
+
+    // Add permanence
+    func saveSearch(searchString: String?) -> Void {
+        let defaults:UserDefaults = UserDefaults.standard
+
+        if var searches = defaults.stringArray(forKey: "twitterSearches") {
+            // Check length and snip array if it exceeds 100
+            if searches.count >= 99 {
+                let subSearches = searches[1...searches.count]
+                searches = Array(subSearches)
+            }
+            searches.append(searchString!)
+            defaults.set(searches, forKey: "twitterSearches")
+        } else {
+            let searches = [twitterQueryText]
+            defaults.set(searches, forKey: "twitterSearches")
+        }
     }
     
     // MARK: - Table view data source
@@ -163,6 +186,12 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableView.automaticDimension
         
+        // Retrieve last search query and set as search.
+        let defaults: UserDefaults = UserDefaults.standard
+        if let searches = defaults.stringArray(forKey: "twitterSearches") {
+            twitterQueryText = searches[searches.count-1]
+        }
+
         twitterQueryTextField.delegate = self
         refresh()
         
