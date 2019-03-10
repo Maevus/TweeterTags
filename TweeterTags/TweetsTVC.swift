@@ -16,9 +16,9 @@ class TweetTableViewCell: UITableViewCell {
     
 }
 
+
 class TweetsTVC: UITableViewController, UITextFieldDelegate {
-    
-    
+
     @IBOutlet weak var twitterQueryTextField: UITextField!
     
     var twitterQueryText: String? = "#UCD"  {
@@ -94,16 +94,40 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetTVCell", for: indexPath) as! TweetTableViewCell
-        let tweeter = self.tweets[indexPath.row]
+        let tweet = self.tweets[indexPath.row]
         
-        cell.tweeterScreenNameLabel.text = tweeter.user.screenName
-        cell.tweetContentLabel.text = tweeter.text
-        cell.tweetDateLabel.text = getFormattedTime(date:tweeter.created)
+        cell.tweeterScreenNameLabel.text = tweet.user.screenName
+        cell.tweetDateLabel.text = getFormattedTime(date:tweet.created)
+        
+        print ("TEXT:: ", tweet.text)
+        print ("MENTIONS:: ", tweet.userMentions)
+        print ("HASHS:: ", tweet.hashtags)
+        print ("URLS:: ", tweet.urls)
+        
+        // modify this to change url colours
+        
+        
+        let tweetText = NSMutableAttributedString(string: tweet.text)
+      
+        // colour hastags blue
+        for mention in tweet.hashtags {
+            tweetText.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.blue, range: mention.nsrange)
+        }
+        
+        // colour mentions green
+        for mention in tweet.userMentions {
+            tweetText.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.green, range: mention.nsrange)
+        }
+        
+        // colour urls red
+        for mention in tweet.urls {
+            tweetText.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: mention.nsrange)
+        }
+        
+        cell.tweetContentLabel.attributedText = tweetText
         
         cell.userAvaterImage.image = #imageLiteral(resourceName: "ucd")
-
-        
-        if let url = tweeter.user.profileImageURL {
+        if let url = tweet.user.profileImageURL {
             fetchUserAvatar(url) { (data) in
                // Thread.sleep(forTimeInterval: 3)
                 print("fetching thumbnail for row: \(indexPath.row)")
@@ -117,6 +141,8 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
                 }
             }
         }
+        
+
 
         return cell
     }
