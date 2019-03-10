@@ -118,6 +118,16 @@ class TweetDetailTVC: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if getSection(forSection: indexPath.section) == SectionTypes.links {
+            if urls.count > 0 {
+                let url = urls[indexPath.row].keyword
+                UIApplication.shared.open(NSURL(string:url)! as URL)
+            }
+        }
+    }
+   
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation

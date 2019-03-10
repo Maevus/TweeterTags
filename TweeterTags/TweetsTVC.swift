@@ -23,7 +23,7 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
     
     var twitterQueryText: String? = "#UCD"  {
         didSet {
-             // code here?
+             refresh()
             }
     }
     
