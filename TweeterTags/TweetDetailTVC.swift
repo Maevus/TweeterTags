@@ -56,15 +56,24 @@ class TweetDetailTVC: UITableViewController {
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
+            var title = ""
+        
             switch getSection(forSection: section) {
             case .hashtags:
-                return "Hashtags"
+                if hashtags.count > 0 {
+                    title =  "Hashtags"
+                }
             case .links:
-                return "Links"
+                if urls.count > 0 {
+                    title  =  "Links" }
             case .users:
-                return "Users"
+                if  userMentions.count > 0 {
+                      return "Users"
+                }
             }
-        }
+        
+        return title
+    }
     
     /*
      Hide unused headers by minimising them when they are not needed.
@@ -127,14 +136,19 @@ class TweetDetailTVC: UITableViewController {
             }
         }
     }
-   
-    // MARK: - Navigation
+    
+     // MARK: - Navigation
+    
+    override func shouldPerformSegue(withIdentifier: String?, sender: Any?) -> Bool {
+        
+        return true
+    }
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    //override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-   // }
-  //  */
+    }
+  
 
 }
