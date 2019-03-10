@@ -54,22 +54,6 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
         textField.backgroundColor = UIColor.white
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        tableView.estimatedRowHeight = tableView.rowHeight
-        tableView.rowHeight = UITableView.automaticDimension
-        
-        twitterQueryTextField.delegate = self
-        refresh()
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
-    }
-    
     
     func refresh() {
         let request = TwitterRequest(search: twitterQueryText!, count: 8)
@@ -80,10 +64,6 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
     }
     
     // MARK: - Table view data source
-    
-    //    override func numberOfSections(in tableView: UITableView) -> Int {
-    //        return 1
-    //    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -96,16 +76,8 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetTVCell", for: indexPath) as! TweetTableViewCell
         let tweet = self.tweets[indexPath.row]
         
-        cell.tweeterScreenNameLabel.text = tweet.user.screenName
+        cell.tweeterScreenNameLabel.text = "@"+tweet.user.screenName
         cell.tweetDateLabel.text = getFormattedTime(date:tweet.created)
-        
-        print ("TEXT:: ", tweet.text)
-        print ("MENTIONS:: ", tweet.userMentions)
-        print ("HASHS:: ", tweet.hashtags)
-        print ("URLS:: ", tweet.urls)
-        
-        // modify this to change url colours
-        
         
         let tweetText = NSMutableAttributedString(string: tweet.text)
       
@@ -129,25 +101,18 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
         cell.userAvaterImage.image = #imageLiteral(resourceName: "ucd")
         if let url = tweet.user.profileImageURL {
             fetchUserAvatar(url) { (data) in
-               // Thread.sleep(forTimeInterval: 3)
                 print("fetching thumbnail for row: \(indexPath.row)")
                 if let imageData = data {
-                    //print("caching thumbnail for row: \(indexPath.row)")
-                    //self.thumbnailCache[cacheID] = fetchData
-                    //imageData = fetchData
                     DispatchQueue.main.async {
                         cell.userAvaterImage.image = UIImage(data: imageData)
                     }
                 }
             }
         }
-        
-
 
         return cell
     }
 
-    // TODO move to model? 
     func fetchUserAvatar(_ url: URL, completion: @escaping (_ data: Data?) -> Void) {
         let request = URLRequest(url:url)
         let config = URLSessionConfiguration.ephemeral
@@ -174,52 +139,32 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
         return df.string(from: dateObj!)
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+            let tweet = tweets[indexPath.row]
+            let tweetTVC = segue.destination as! TweetDetailTVC
+ 
+            tweetTVC.hashtags = tweet.hashtags
+            tweetTVC.media = tweet.media
+            tweetTVC.urls = tweet.urls
+            tweetTVC.userMentions = tweet.userMentions
+            
+        }
+    }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
     
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
-    
-    /*
-     // Override to support editing the table view.
-     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-     if editingStyle == .delete {
-     // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
-     } else if editingStyle == .insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
-    
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        tableView.estimatedRowHeight = tableView.rowHeight
+        tableView.rowHeight = UITableView.automaticDimension
+        
+        twitterQueryTextField.delegate = self
+        refresh()
+        
+    }
 }
 
