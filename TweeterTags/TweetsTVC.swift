@@ -20,10 +20,13 @@ class TweetTableViewCell: UITableViewCell {
 class TweetsTVC: UITableViewController, UITextFieldDelegate {
 
     @IBOutlet weak var twitterQueryTextField: UITextField!
+    @IBAction func unwindToMain(_ sender: UIStoryboardSegue) {}
     
     var twitterQueryText: String? = "#UCD"  {
         didSet {
-             refresh()
+            print ("\(twitterQueryText!)")
+            twitterQueryTextField.text = twitterQueryText!
+            refresh()
             }
     }
     
@@ -32,7 +35,6 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
             if tableView.window != nil {
                 tableView.reloadData()
             }
-            print ("\(tweets.count))")
         }
     }
     
@@ -101,7 +103,6 @@ class TweetsTVC: UITableViewController, UITextFieldDelegate {
         cell.userAvaterImage.image = #imageLiteral(resourceName: "ucd")
         if let url = tweet.user.profileImageURL {
             fetchUserAvatar(url) { (data) in
-                print("fetching thumbnail for row: \(indexPath.row)")
                 if let imageData = data {
                     DispatchQueue.main.async {
                         cell.userAvaterImage.image = UIImage(data: imageData)

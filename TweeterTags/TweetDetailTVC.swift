@@ -139,16 +139,40 @@ class TweetDetailTVC: UITableViewController {
     
      // MARK: - Navigation
     
+    // unwindToMain
     override func shouldPerformSegue(withIdentifier: String?, sender: Any?) -> Bool {
         
-        return true
+        if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+            let section = indexPath.section
+            if getSection(forSection: section) != SectionTypes.links {
+                return true
+            } else  {
+                return false
+            }
+        } else {
+            return true
+        }
     }
-
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        let tweetTVC = segue.destination as! TweetsTVC
+        
+        if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+             let section = indexPath.section
+            
+             switch getSection(forSection: section) {
+             case .hashtags:
+                tweetTVC.twitterQueryText = hashtags[indexPath.row].keyword
+                break
+             case .users:
+                tweetTVC.twitterQueryText = userMentions[indexPath.row].keyword
+                break
+             default:
+                break
+    
+            }
+            
+        }
+        
     }
-  
-
 }
